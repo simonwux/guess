@@ -2,16 +2,7 @@ import React from "react";
 
 import "./App.css";
 
-
-const Follower = (props) => (
-  <div className="follower">
-    Follower:
-    {props.follower}
-    <button>🤙</button>
-    Votes : {0}
-  </div>
-);
-
+import Follower from "./Follower.js";
 
 
 // const App = function () {
