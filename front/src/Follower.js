@@ -6,7 +6,7 @@ class Follower extends Component {
     super(props);
 
     this.state = {
-      votes :0
+      votes: 0
     };
 
     this.onVote = this.onVote.bind(this);
@@ -23,10 +23,12 @@ class Follower extends Component {
       <div className="follower">
         Follower:
         {this.props.follower}
-        <button onClick={this.onVote}>
+        <button type="button"
+          className="btn btn-primary"
+          onClick={this.onVote}>
           <span role="img">🤙</span>
         </button>
-         Votes : {this.state.votes}
+        Votes : {this.state.votes}
       </div>
     );
   }
