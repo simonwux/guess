@@ -3,6 +3,14 @@ import React from "react";
 import "./App.css";
 
 
+const Follower = (props) => (
+  <div className="follower">
+    Follower:
+    {props.follower}
+    <button>🤙</button>
+    Votes : {0}
+  </div>
+);
 
 
 
@@ -15,13 +23,17 @@ import "./App.css";
 const App = () => {
   let data = ["John", "Mafe", "Suhas"];
 
+  function renderFollowers() {
+    return data.map((f,i) =>
+      <Follower follower={f} key={i}/>
+    );
+  }
+
 
   return (<div className="App">
     <h1>Followers</h1>
 
-    { data.map((f,i) =>
-      <div key={i}>{f}</div>
-    )}
+    { renderFollowers() }
 
     <div>Made by John with ♥️</div>
   </div>
