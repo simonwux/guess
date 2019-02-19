@@ -116,8 +116,23 @@ function signup(req, res) {
             res.status(500);
             res.send('An error ocurred during the operation.');
           }
-          else {
-            res.send(r.ops[0]);
+        });
+      }
+    });
+
+    db.collection('count').findOne({'email': req.header('email')}, (err, r) => {
+      if(!err && r) {
+        res.status(403);
+        res.send('There is already a user with the email provided.');
+      }
+      else {
+        db.collection('count').insertOne({
+          email: req.header('email'),  
+          count: 0
+        }, (err, r) => {
+          if(err) {
+            res.status(500);
+            res.send('An error ocurred during the operation.');
           }
         });
       }
@@ -190,7 +205,125 @@ function guess(req, res) {
 
 }
 
+function getWinner(req, res) {
 
+  const url = "mongodb://localhost:27017";
+
+  // Database Name
+  const dbName = "users";
+
+  // Create a new MongoClient
+  const client = new MongoClient(url);
+
+  // Use connect method to connect to the Server
+  client.connect(function(err) {
+    assert.equal(null, err);
+    console.log("Connected successfully to server");
+
+    const db = client.db(dbName);
+
+    db.collection('winner')
+    .find()
+    .sort({"count":1})
+    .limit(10)
+    .toArray(function (err, docs) {
+      assert.equal(null, err);
+      res.send(docs);
+    });
+  });
+}
+
+function setWinner(req, res) {
+
+  const url = "mongodb://localhost:27017";
+
+  // Database Name
+  const dbName = "users";
+
+  // Create a new MongoClient
+  const client = new MongoClient(url);
+
+  // Use connect method to connect to the Server
+  client.connect(function(err) {
+    assert.equal(null, err);
+    console.log("Connected successfully to server");
+
+    const db = client.db(dbName);
+
+    db.collection('winner').findOne({'email': req.header('email')}, (err, r) => {
+      if(!err && r) {
+        res.status(403);
+        res.send('There is already a user with the email provided.');
+      }
+      else {
+        db.collection('winner').insertOne({
+          email: req.header('email'),  
+          count: parseInt(req.header('count'))
+        }, (err, r) => {
+          if(err) {
+            res.status(500);
+            res.send('An error ocurred during the operation.');
+          }
+          // else {
+          //   res.send(r.ops[0]);
+          // }
+        });
+      }
+    });
+  });
+}
+
+function getCount(req, res) {
+
+  const url = "mongodb://localhost:27017";
+
+  // Database Name
+  const dbName = "users";
+
+  // Create a new MongoClient
+  const client = new MongoClient(url);
+
+  // Use connect method to connect to the Server
+  client.connect(function(err) {
+    assert.equal(null, err);
+    console.log("Connected successfully to server");
+
+    const db = client.db(dbName);
+    db.collection('count')
+    .find({'email':req.header("email")})
+    .toArray(function (err, docs) {
+      assert.equal(null, err);
+      res.send(docs);
+    });
+  });
+}
+
+function addCount(req, res) {
+
+  const url = "mongodb://localhost:27017";
+
+  // Database Name
+  const dbName = "users";
+
+  // Create a new MongoClient
+  const client = new MongoClient(url);
+
+  // Use connect method to connect to the Server
+  client.connect(function(err) {
+    assert.equal(null, err);
+    console.log("Connected successfully to server");
+
+
+
+    const db = client.db(dbName);
+    db.collection("count"). find({'email':req.header("email")}).toArray(function(err, result) { 
+      var count = parseInt(result[0]['count']) + 1;
+      db.collection('count').findOneAndUpdate({'email':req.header("email")}, {$set: {'count': count}}, (err, r) => {
+      });
+    });
+    
+  });
+}
 
 
 /* GET home page. */
@@ -214,6 +347,30 @@ router.post("/users", function(req, res) {
 router.get("/guess", function(req, res) {
   guess(req, res);
 });
+
+/* guess. */
+router.get("/winner", function(req, res) {
+  getWinner(req, res);
+});
+
+
+/* guess. */
+router.post("/winner", function(req, res) {
+  setWinner(req, res);
+});
+
+
+/* get count. */
+router.get("/count", function(req, res) {
+  getCount(req, res);
+});
+
+
+/* add count. */
+router.post("/count", function(req, res) {
+  addCount(req, res);
+});
+
 
 
 module.exports = router;
