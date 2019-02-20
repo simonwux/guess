@@ -1,51 +1,39 @@
-import React, {Component} from "react";
-
+import React, { Component } from 'react';
+import Login from "./components/Login/Login";
 import "./App.css";
 
-import Follower from "./Follower.js";
-
-// const App = function () {
-//   return (<div className="App">
-//     Hola John!
-//   </div>);
-// };
-
 class App extends Component {
-  constructor(props) {
-    super(props);
 
+  constructor(){
+    super();
     this.state = {
-      data: []
+      loggedIn: false,
+      email: ""
     };
   }
 
-  renderFollowers() {
-    return this.state.data.map((f, i) => <Follower follower={f.follower.screen_name} key={i} />);
+  renderLogin() {
+    return(
+      <Login 
+        onLogin={result => {
+          this.setState({loggedIn: true, email: result});
+        }}
+      />
+    );
   }
 
-  componentDidMount() {
-    fetch("/api")
-      .then((response) => {
-        // Got the data, transform it into json
-        return response.json();
-      })
-      .then((data) => this.setState({
-        data:data
-      }));
+  renderApp() {
+    // return(
+    //   <Duozi email={this.state.email}/>
+    // );
   }
 
   render() {
     return (
       <div className="App">
-        <h1>Followers</h1>
-
-        {this.renderFollowers()}
-
-        <div> Total # of followers: {this.state.data.length} </div>
-
-        <div>
-          Made by John with <span role="img">♥️</span>
-        </div>
+        {this.state.loggedIn ? 
+          this.renderApp() :
+          this.renderLogin() }
       </div>
     );
   }

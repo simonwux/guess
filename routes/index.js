@@ -2,42 +2,42 @@ var express = require("express");
 var router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
-function getFollowers(callback) {
+// function getFollowers(callback) {
 
 
-  // Connection URL
-  const url = "mongodb://localhost:27017";
+//   // Connection URL
+//   const url = "mongodb://localhost:27017";
 
-  // Database Name
-  const dbName = "duto_guerra_followers";
+//   // Database Name
+//   const dbName = "duto_guerra_followers";
 
-  // Create a new MongoClient
-  const client = new MongoClient(url);
+//   // Create a new MongoClient
+//   const client = new MongoClient(url);
 
-  // Use connect method to connect to the Server
-  client.connect(function(err) {
-    assert.equal(null, err);
-    console.log("Connected successfully to server");
+//   // Use connect method to connect to the Server
+//   client.connect(function(err) {
+//     assert.equal(null, err);
+//     console.log("Connected successfully to server");
 
-    const db = client.db(dbName);
+//     const db = client.db(dbName);
 
-    const followers = db.collection("followers");
+//     const followers = db.collection("followers");
 
-    followers.find({})
-      .limit(100)
-      .toArray(function (err, docs) {
-        assert.equal(null, err);
-
-
-        callback(docs);
-        client.close();
-      });
+//     followers.find({})
+//       .limit(100)
+//       .toArray(function (err, docs) {
+//         assert.equal(null, err);
 
 
-  });
+//         callback(docs);
+//         client.close();
+//       });
 
 
-}
+//   });
+
+
+// }
 
 function login(req, res) {
 
@@ -78,14 +78,14 @@ function login(req, res) {
 
 function signup(req, res) {
 
+  console.log(req.body.email);
+  console.log(req.body.password);
 
-  if(!req.header("email") || !req.header("password")) {
+  if(!req.body.email || !req.body.password) {
     res.status(400);
     res.send("Email and password required.");
   } 
   else {
-    console.log(req.header("email"));
-    console.log(req.header("password"));
     // Connection URL
     const url = "mongodb://localhost:27017";
 
@@ -102,15 +102,15 @@ function signup(req, res) {
 
       const db = client.db(dbName);
 
-      db.collection("users").findOne({"email": req.header("email")}, (err, r) => {
+      db.collection("users").findOne({"email": req.body.email}, (err, r) => {
         if(!err && r) {
           res.status(403);
           res.send("There is already a user with the email provided.");
         }
         else {
           db.collection("users").insertOne({
-            email: req.header("email"),  
-            password: req.header("password")
+            email: req.body.email,  
+            password: req.body.password
           }, (err, r) => {
             if(err) {
               res.status(500);
@@ -120,20 +120,21 @@ function signup(req, res) {
         }
       });
 
-      db.collection("count").findOne({"email": req.header("email")}, (err, r) => {
+      db.collection("count").findOne({"email":req.body.email}, (err, r) => {
         if(!err && r) {
           res.status(403);
           res.send("There is already a user with the email provided.");
         }
         else {
           db.collection("count").insertOne({
-            email: req.header("email"),  
+            email: req.body.email,  
             count: 0
           }, (err, r) => {
             if(err) {
               res.status(500);
               res.send("An error ocurred during the operation.");
             }
+            else res.send(r);
           });
         }
       });
