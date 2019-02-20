@@ -8,7 +8,7 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      singUp: false
+      signUp: false
     };
   }
 
@@ -55,16 +55,16 @@ class Login extends Component {
   }
 
   tryLogin() {
-    if(this.state.singUp) this.handleRegister();
+    if(this.state.signUp) this.handleRegister();
     else this.handleLogin();
     this.setState({email: '', password: ''});
   }
 
   render() {
-    const title = this.state.singUp ? 'Sign Up' : 'Login';
-    const msg = this.state.singUp ? 'If you already have an account: ' : 'If you don\'t have an account yet: ';
-    const buttonMsg = !this.state.singUp ? 'login' : 'sign up';
-    const buttonChangeMsg = this.state.singUp ? 'login' : 'sign up';
+    const title = this.state.signUp ? 'Sign Up' : 'Login';
+    const msg = this.state.signUp ? 'If you already have an account: ' : 'If you don\'t have an account yet: ';
+    const buttonMsg = !this.state.signUp ? 'login' : 'sign up';
+    const buttonChangeMsg = this.state.signUp ? 'login' : 'sign up';
     return (
       <div className='login-container'>
         <h1>Guess</h1>
@@ -79,7 +79,7 @@ class Login extends Component {
           </div>
           <div className='login-register-change-container'>
             <span>{msg}</span>
-            <button onClick={() => this.setState({singUp: !this.state.singUp, email: '', password: ''})}>{buttonChangeMsg}</button>
+            <button onClick={() => this.setState({signUp: !this.state.signUp, email: '', password: ''})}>{buttonChangeMsg}</button>
           </div>
         </div>
       </div>
