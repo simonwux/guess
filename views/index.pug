@@ -1,0 +1,73 @@
+extends layout
+
+block content
+
+  div.container
+      div.row
+        div.col-lg-10.col-xl-9.mx-auto
+          div.card.card-signin.flex-row.my-5
+            div.card-img-left
+              div.top 
+                h1 Guess
+              div.bottom
+                div.two
+                  h1 2
+                div.three 
+                  h1 3
+            div.card-body
+              h5.card-title.text-center Register
+              form.form-signin
+                div.form-label-group
+                  input(
+                    type="text"
+                    id="inputUsername"
+                    class="form-control"
+                    placeholder="Username"
+                    required
+                    autofocus
+                  )
+                  label(
+                    for="inputUsername"
+                  ) Username
+                div.form-label-group
+                  input(
+                    type="email"
+                    id="inputEmail"
+                    class="form-control"
+                    placeholder="EMail address"
+                    requires
+                  )
+                  label(
+                    for="inputEmail"
+                  ) Email address
+                hr
+                div.form-label-group
+                  input(
+                    type="password"
+                    id="inputPassword"
+                    class="form-control"
+                    placeholder="Password"
+                    required
+                  )
+                  label(
+                    for="inputPassword"
+                  ) Password
+                div.form-label-group
+                  input(
+                    type="password"
+                    id="inputConfirmPassword"
+                    class="form-control"
+                    placeholder="Password"
+                    required
+                  )
+                  label(
+                    for="inputConfirmPassword"
+                  ) Confirm Password
+                button(
+                  class="btn btn-lg btn-primary btn-block text-uppercase"
+                  tyype="submit"
+                ) Register
+                a(
+                  class="d-block text-center mt-2 small"
+                  href="#"
+                ) Sign In
