@@ -2,6 +2,7 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Icon from "@material-ui/core/Icon";
+import PropTypes from "prop-types";
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
 import Face from "@material-ui/icons/Face";
@@ -28,7 +29,10 @@ class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cardAnimation: "cardHidden"
+      cardAnimation: "cardHidden",
+      email: "",
+      password: "",
+      signUp: false
     };
   }
   componentDidMount() {
@@ -206,5 +210,9 @@ class LoginPage extends React.Component {
     );
   }
 }
+
+LoginPage.propTypes = {
+  onLogin: PropTypes.func
+};
 
 export default withStyles(loginPageStyle)(LoginPage);
