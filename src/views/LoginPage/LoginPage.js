@@ -35,6 +35,9 @@ class LoginPage extends React.Component {
       signUp: false
     };
   }
+  login() {
+    this.props.onLogin("test", "test@test.com");
+  }
   componentDidMount() {
     setTimeout(
       function() {
@@ -113,7 +116,12 @@ class LoginPage extends React.Component {
                                   />
                                 </CardBody>
                                 <CardFooter className={classes.cardFooter}>
-                                  <Button simple color="primary" size="lg">
+                                  <Button
+                                    simple
+                                    color="primary"
+                                    size="lg"
+                                    onClick={this.login.bind(this)}
+                                  >
                                     Get started
                                   </Button>
                                 </CardFooter>
@@ -171,6 +179,25 @@ class LoginPage extends React.Component {
                                   <CustomInput
                                     labelText="Password"
                                     id="pass-reg"
+                                    formControlProps={{
+                                      fullWidth: true
+                                    }}
+                                    inputProps={{
+                                      type: "password",
+                                      endAdornment: (
+                                        <InputAdornment position="end">
+                                          <Icon
+                                            className={classes.inputIconsColor}
+                                          >
+                                            lock_outline
+                                          </Icon>
+                                        </InputAdornment>
+                                      )
+                                    }}
+                                  />
+                                  <CustomInput
+                                    labelText="Confirm Password"
+                                    id="pass-reg-con"
                                     formControlProps={{
                                       fullWidth: true
                                     }}

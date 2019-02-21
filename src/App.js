@@ -6,19 +6,27 @@ class App extends Component {
     super();
     this.state = {
       loggedIn: false,
-      Name: "",
+      name: "",
       email: ""
     };
   }
 
   renderLogin() {
-    return <LoginPage />;
+    return (
+      <LoginPage
+        onLogin={(nameRes, emailRes) => {
+          this.setState({
+            loggedIn: true,
+            name: nameRes,
+            email: emailRes
+          });
+        }}
+      />
+    );
   }
 
   renderApp() {
-    // return(
-    //   <Duozi email={this.state.email}/>
-    // );
+    return <h1>{this.state.name}</h1>;
   }
 
   render() {
