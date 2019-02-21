@@ -56,7 +56,7 @@ function login(req, res) {
   const client = new MongoClient(url);
 
   // Use connect method to connect to the Server
-  client.connect(function(err) {
+  client.connect({ useNewUrlParser: true }, function(err) {
     assert.equal(null, err);
     console.log("Connected successfully to server");
 
@@ -96,7 +96,7 @@ function signup(req, res) {
     const client = new MongoClient(url);
 
     // Use connect method to connect to the Server
-    client.connect(function(err) {
+    client.connect({ useNewUrlParser: true }, function(err) {
       assert.equal(null, err);
       console.log("Connected successfully to server");
 
@@ -217,7 +217,7 @@ function getWinner(req, res) {
   const client = new MongoClient(url);
 
   // Use connect method to connect to the Server
-  client.connect(function(err) {
+  client.connect({ useNewUrlParser: true }, function(err) {
     assert.equal(null, err);
     console.log("Connected successfully to server");
 
