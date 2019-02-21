@@ -7,9 +7,6 @@ import PropTypes from "prop-types";
 import Email from "@material-ui/icons/Email";
 import Face from "@material-ui/icons/Face";
 import People from "@material-ui/icons/People";
-import Dashboard from "@material-ui/icons/Dashboard";
-import Schedule from "@material-ui/icons/Schedule";
-import List from "@material-ui/icons/List";
 import PersonAdd from "@material-ui/icons/PersonAdd";
 // core components
 import Header from "components/Header/Header.jsx";
@@ -31,13 +28,62 @@ class LoginPage extends React.Component {
     this.state = {
       cardAnimation: "cardHidden",
       email: "",
-      password: "",
-      signUp: false
+      password: ""
     };
   }
-  login() {
-    this.props.onLogin("test", "test@test.com");
+
+  handleChangeEmail(e) {
+    this.setState({ email: e.target.value });
   }
+
+  handleChangePassword(e) {
+    this.setState({ password: e.target.value });
+  }
+
+  handleRegister() {
+    fetch("/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: this.state.email,
+        password: this.state.password
+      })
+    })
+      .then(response => {
+        if (response.status === 200) {
+          response.json().then(json => this.props.onLogin(json.email));
+        }
+      })
+      .catch(err => console.log(err));
+  }
+
+  handleLogin() {
+    fetch("/users", {
+      headers: {
+        email: this.state.email,
+        password: this.state.password
+      }
+    })
+      .then(response => {
+        if (response.status === 200) {
+          response.json().then(json => this.props.onLogin(json.email));
+        }
+      })
+      .catch(err => console.log(err));
+  }
+
+  tryLogin() {
+    this.handleLogin();
+    this.setState({ password: "" });
+  }
+
+  tryRegister() {
+    this.handleRegister();
+    this.setState({ password: "" });
+  }
+
   componentDidMount() {
     setTimeout(
       function() {
@@ -46,6 +92,7 @@ class LoginPage extends React.Component {
       700
     );
   }
+
   render() {
     const { classes, ...rest } = this.props;
     return (
@@ -81,6 +128,9 @@ class LoginPage extends React.Component {
                                   <CustomInput
                                     labelText="Email..."
                                     id="email-login"
+                                    placeholder=""
+                                    value={this.state.email}
+                                    onChange={this.handleChangeEmail.bind(this)}
                                     formControlProps={{
                                       fullWidth: true
                                     }}
@@ -98,6 +148,10 @@ class LoginPage extends React.Component {
                                   <CustomInput
                                     labelText="Password"
                                     id="pass-login"
+                                    value={this.state.password}
+                                    onChange={this.handleChangePassword.bind(
+                                      this
+                                    )}
                                     formControlProps={{
                                       fullWidth: true
                                     }}
@@ -120,7 +174,7 @@ class LoginPage extends React.Component {
                                     simple
                                     color="primary"
                                     size="lg"
-                                    onClick={this.login.bind(this)}
+                                    onClick={this.tryLogin.bind(this)}
                                   >
                                     Get started
                                   </Button>
@@ -162,6 +216,9 @@ class LoginPage extends React.Component {
                                   <CustomInput
                                     labelText="Email..."
                                     id="email-reg"
+                                    placeholder=""
+                                    value={this.state.email}
+                                    onChange={this.handleChangeEmail.bind(this)}
                                     formControlProps={{
                                       fullWidth: true
                                     }}
@@ -179,6 +236,10 @@ class LoginPage extends React.Component {
                                   <CustomInput
                                     labelText="Password"
                                     id="pass-reg"
+                                    value={this.state.password}
+                                    onChange={this.handleChangePassword.bind(
+                                      this
+                                    )}
                                     formControlProps={{
                                       fullWidth: true
                                     }}
@@ -216,7 +277,12 @@ class LoginPage extends React.Component {
                                   />
                                 </CardBody>
                                 <CardFooter className={classes.cardFooter}>
-                                  <Button simple color="primary" size="lg">
+                                  <Button
+                                    simple
+                                    color="primary"
+                                    size="lg"
+                                    onClick={this.tryRegister.bind(this)}
+                                  >
                                     Register
                                   </Button>
                                 </CardFooter>

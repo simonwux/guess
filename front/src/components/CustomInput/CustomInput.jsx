@@ -22,7 +22,9 @@ function CustomInput({ ...props }) {
     error,
     white,
     inputRootCustomClasses,
-    success
+    success,
+    onChange,
+    value
   } = props;
 
   const labelClasses = classNames({
@@ -70,6 +72,8 @@ function CustomInput({ ...props }) {
           underline: underlineClasses
         }}
         id={id}
+        onChange={onChange}
+        value={value}
         {...inputProps}
       />
     </FormControl>
@@ -86,7 +90,9 @@ CustomInput.propTypes = {
   inputRootCustomClasses: PropTypes.string,
   error: PropTypes.bool,
   success: PropTypes.bool,
-  white: PropTypes.bool
+  white: PropTypes.bool,
+  onChange: PropTypes.func,
+  value: PropTypes.string
 };
 
 export default withStyles(customInputStyle)(CustomInput);

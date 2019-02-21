@@ -56,7 +56,7 @@ function login(req, res) {
   const client = new MongoClient(url);
 
   // Use connect method to connect to the Server
-  client.connect({ useNewUrlParser: true }, function(err) {
+  client.connect(function(err) {
     assert.equal(null, err);
     console.log("Connected successfully to server");
 
@@ -96,7 +96,7 @@ function signup(req, res) {
     const client = new MongoClient(url);
 
     // Use connect method to connect to the Server
-    client.connect({ useNewUrlParser: true }, function(err) {
+    client.connect(function(err) {
       assert.equal(null, err);
       console.log("Connected successfully to server");
 
@@ -337,8 +337,10 @@ router.get("/api", function(req, res, next) {
 */
 
 /* GET home page. */
-router.get("/", function(req, res, next) {
-  res.render("index", document.getElementById("root"));
+router.get("/api", function(req, res, next) {
+  getFollowers(function (docs) {
+    res.send(docs);
+  });
 });
 
 /* login. */
