@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "start": "react-scripts start",
-    "watch": "nodemon ./bin/www"
+    "watch": "nodemon ./bin/www",
+    "build": "node ./bin/www"
   },
   "dependencies": {
     "@material-ui/core": "3.9.2",
