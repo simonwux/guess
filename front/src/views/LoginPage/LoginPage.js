@@ -8,6 +8,8 @@ import Email from "@material-ui/icons/Email";
 import Face from "@material-ui/icons/Face";
 import People from "@material-ui/icons/People";
 import PersonAdd from "@material-ui/icons/PersonAdd";
+import Check from "@material-ui/icons/Check";
+import Warning from "@material-ui/icons/Warning";
 // core components
 import Header from "components/Header/Header.jsx";
 import Footer from "components/Footer/Footer.jsx";
@@ -21,15 +23,34 @@ import CardFooter from "components/Card/CardFooter.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
 import NavPills from "components/NavPills/NavPills.jsx";
 
+import SnackbarContent from "components/Snackbar/SnackbarContent.jsx";
+
+import notificationsStyles from "assets/jss/guess-react/views/componentsSections/notificationsStyles.jsx";
 import loginPageStyle from "assets/jss/guess-react/views/loginPage.jsx";
+
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       cardAnimation: "cardHidden",
       email: "",
-      password: ""
+      password: "",
+      msg: ""
     };
+  }
+
+  notify() {
+    if (this.state.msg) {
+      return (
+        <SnackbarContent
+          message={<span>{this.state.msg}</span>}
+          close
+          color="danger"
+          icon="info_outline"
+        />
+      );
+    }
+    return null;
   }
 
   handleChangeEmail(e) {
@@ -54,6 +75,8 @@ class LoginPage extends React.Component {
       .then(response => {
         if (response.status === 200) {
           response.json().then(json => this.props.onLogin(json.email));
+        } else {
+          response.json().then(data => this.setState({ msg: data.msg }));
         }
       })
       .catch(err => console.log(err));
@@ -69,6 +92,9 @@ class LoginPage extends React.Component {
       .then(response => {
         if (response.status === 200) {
           response.json().then(json => this.props.onLogin(json.email));
+        } else {
+          // console.log(response);
+          response.json().then(data => this.setState({ msg: data.msg }));
         }
       })
       .catch(err => console.log(err));
@@ -95,6 +121,7 @@ class LoginPage extends React.Component {
 
   render() {
     const { classes, ...rest } = this.props;
+    // const { msgBar } = this.notify();
     return (
       <div>
         <Header absolute color="transparent" brand="Guess 2/3" {...rest} />
@@ -125,6 +152,7 @@ class LoginPage extends React.Component {
                                   <h4>Login</h4>
                                 </CardHeader>
                                 <CardBody>
+                                  <div>{this.notify()}</div>
                                   <CustomInput
                                     labelText="Email..."
                                     id="email-login"

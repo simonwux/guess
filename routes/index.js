@@ -43,8 +43,8 @@ function login(req, res) {
 
 
   if(!req.get("email") || !req.get("password")) {
-    res.status(400);
-    res.send({msg: "Email and password required."});
+    res.status(400).send({msg: "Email and password required."});
+    return;
   }
   // Connection URL
   const url = "mongodb://localhost:27017";
@@ -64,8 +64,8 @@ function login(req, res) {
 
     db.collection("users").findOne({"email": req.header("email"), "password": req.header("password")}, (err, r) => {
       if(err || !r) {
-        res.status(404);
-        res.send({msg:"Email or password wrong."});
+        res.status(404).send({msg:"Email or password wrong."});
+        return;
       }
       else res.send(r);
     });
@@ -82,8 +82,8 @@ function signup(req, res) {
   console.log(req.body.password);
 
   if(!req.body.email || !req.body.password) {
-    res.status(400);
-    res.send("Email and password required.");
+    res.status(400).send("Email and password required.");
+    return;
   } 
   else {
     // Connection URL
@@ -104,8 +104,8 @@ function signup(req, res) {
 
       db.collection("users").findOne({"email": req.body.email}, (err, r) => {
         if(!err && r) {
-          res.status(403);
-          res.send("There is already a user with the email provided.");
+          res.status(403).send("There is already a user with the email provided.");
+          return;
         }
         else {
           db.collection("users").insertOne({
@@ -113,8 +113,8 @@ function signup(req, res) {
             password: req.body.password
           }, (err, r) => {
             if(err) {
-              res.status(500);
-              res.send("An error ocurred during the operation.");
+              res.status(500).send("An error ocurred during the operation.");
+              return;
             }
           });
         }
@@ -122,8 +122,8 @@ function signup(req, res) {
 
       db.collection("count").findOne({"email":req.body.email}, (err, r) => {
         if(!err && r) {
-          res.status(403);
-          res.send("There is already a user with the email provided.");
+          res.status(403).send("There is already a user with the email provided.");
+          return;
         }
         else {
           db.collection("count").insertOne({
@@ -131,8 +131,8 @@ function signup(req, res) {
             count: 0
           }, (err, r) => {
             if(err) {
-              res.status(500);
-              res.send("An error ocurred during the operation.");
+              res.status(500).send("An error ocurred during the operation.");
+              return;
             }
             else res.send(r);
           });
