@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "heroku-postbuild": "cd front && npm install && npm run build"
+    "heroku-postbuild": "cd front && npm install && npm run build && yarn start"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
