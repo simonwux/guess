@@ -78,9 +78,6 @@ function login(req, res) {
 
 function signup(req, res) {
 
-  console.log(req.body.email);
-  console.log(req.body.password);
-
   if(!req.body.email || !req.body.password) {
     res.status(400).send("Email and password required.");
     return;
@@ -219,6 +216,9 @@ function getWinner(req, res) {
   // Use connect method to connect to the Server
   client.connect({ useNewUrlParser: true }, function(err) {
     assert.equal(null, err);
+    if (err) {
+        res.status(404).send({msg:"Get winner wrong."});
+    }
     console.log("Connected successfully to server");
 
     const db = client.db(dbName);
@@ -244,6 +244,9 @@ function setWinner(req, res) {
   // Create a new MongoClient
   const client = new MongoClient(url);
 
+  var email = req.body.email;
+  var count = req.body.count;
+
   // Use connect method to connect to the Server
   client.connect(function(err) {
     assert.equal(null, err);
@@ -251,15 +254,15 @@ function setWinner(req, res) {
 
     const db = client.db(dbName);
 
-    db.collection("winner").findOne({"email": req.header("email")}, (err, r) => {
+    db.collection("winner").findOne({"email": email}, (err, r) => {
       if(!err && r) {
         res.status(403);
         res.send("There is already a user with the email provided.");
       }
       else {
         db.collection("winner").insertOne({
-          email: req.header("email"),  
-          count: parseInt(req.header("count"))
+          email: email,  
+          count: parseInt(count)
         }, (err, r) => {
           if(err) {
             res.status(500);
@@ -272,6 +275,7 @@ function setWinner(req, res) {
       }
     });
   });
+  res.send({msg:"set a winner"})
 }
 
 function getCount(req, res) {
@@ -302,7 +306,9 @@ function getCount(req, res) {
 function addCount(req, res) {
 
   const url = "mongodb://localhost:27017";
-
+  //console.log(req.toString());
+  var email = req.body.email;
+  //console.log(req.body.email);
   // Database Name
   const dbName = "users";
 
@@ -313,14 +319,24 @@ function addCount(req, res) {
   client.connect(function(err) {
     assert.equal(null, err);
     console.log("Connected successfully to server");
-
+    //console.log(email);
 
 
     const db = client.db(dbName);
-    db.collection("count"). find({"email":req.header("email")}).toArray(function(err, result) { 
+    db.collection("count"). find({"email":email}).toArray(function(err, result) { 
+    assert.equal(null, err);
+    // console.log(result);
+    // console.log(result.length);
+    if (result.length == 0){
+        res.status(404).send({msg:"Email is wrong."});
+    } else {
+    //console.log("Successfuly found one.");
+      //console.log(result);
       var count = parseInt(result[0]["count"]) + 1;
-      db.collection("count").findOneAndUpdate({"email":req.header("email")}, {$set: {"count": count}}, (err, r) => {
+      db.collection("count").findOneAndUpdate({"email":email}, {$set: {"count": count}}, (err, r) => {
       });
+      res.send({msg:"adding counter"});
+    }
     });
     
   });
