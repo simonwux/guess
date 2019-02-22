@@ -8,8 +8,6 @@ import Email from "@material-ui/icons/Email";
 import Face from "@material-ui/icons/Face";
 import People from "@material-ui/icons/People";
 import PersonAdd from "@material-ui/icons/PersonAdd";
-import Check from "@material-ui/icons/Check";
-import Warning from "@material-ui/icons/Warning";
 // core components
 import Header from "components/Header/Header.jsx";
 import Footer from "components/Footer/Footer.jsx";
@@ -22,35 +20,22 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
 import NavPills from "components/NavPills/NavPills.jsx";
-
 import SnackbarContent from "components/Snackbar/SnackbarContent.jsx";
 
-import notificationsStyles from "assets/jss/guess-react/views/componentsSections/notificationsStyles.jsx";
 import loginPageStyle from "assets/jss/guess-react/views/loginPage.jsx";
 
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
+    this.closeMessage = this.closeMessage.bind(this);
     this.state = {
       cardAnimation: "cardHidden",
+      name: "",
       email: "",
       password: "",
+      password2: "",
       msg: ""
     };
-  }
-
-  notify() {
-    if (this.state.msg) {
-      return (
-        <SnackbarContent
-          message={<span>{this.state.msg}</span>}
-          close
-          color="danger"
-          icon="info_outline"
-        />
-      );
-    }
-    return null;
   }
 
   handleChangeEmail(e) {
@@ -119,9 +104,14 @@ class LoginPage extends React.Component {
     );
   }
 
+  closeMessage() {
+    console.log("XXX");
+    this.setState({ msg: "" });
+  }
+
   render() {
     const { classes, ...rest } = this.props;
-    // const { msgBar } = this.notify();
+    const msg = this.state.msg;
     return (
       <div>
         <Header absolute color="transparent" brand="Guess 2/3" {...rest} />
@@ -152,7 +142,16 @@ class LoginPage extends React.Component {
                                   <h4>Login</h4>
                                 </CardHeader>
                                 <CardBody>
-                                  <div>{this.notify()}</div>
+                                  {msg.length > 0 && (
+                                    // <LoginError msg={this.state.msg} />
+                                    <SnackbarContent
+                                      message={msg}
+                                      close
+                                      color="danger"
+                                      icon="info_outline"
+                                      closeMessage={this.closeMessage}
+                                    />
+                                  )}
                                   <CustomInput
                                     labelText="Email..."
                                     id="email-login"

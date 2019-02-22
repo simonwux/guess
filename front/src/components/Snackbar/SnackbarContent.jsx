@@ -14,8 +14,15 @@ import snackbarContentStyle from "assets/jss/guess-react/components/snackbarCont
 class SnackbarContent extends React.Component {
   constructor(props) {
     super(props);
-    this.closeAlert = this.closeAlert.bind(this);
-    const { classes, message, color, close, icon } = props;
+    this.closeMessage = this.closeMessage.bind(this);
+  }
+
+  closeMessage() {
+    this.props.closeMessage();
+  }
+
+  render() {
+    const { classes, message, color, close, icon } = this.props;
     var action = [];
     if (close !== undefined) {
       action = [
@@ -24,7 +31,7 @@ class SnackbarContent extends React.Component {
           key="close"
           aria-label="Close"
           color="inherit"
-          onClick={this.closeAlert}
+          onClick={this.closeMessage}
         >
           <Close className={classes.close} />
         </IconButton>
@@ -37,36 +44,28 @@ class SnackbarContent extends React.Component {
         snackIcon = <props.icon className={classes.icon} />;
         break;
       case "string":
-        snackIcon = <Icon className={classes.icon}>{props.icon}</Icon>;
+        snackIcon = <Icon className={classes.icon}>{this.props.icon}</Icon>;
         break;
       default:
         snackIcon = null;
         break;
     }
 
-    this.state = {
-      alert: (
-        <Snack
-          message={
-            <div>
-              {snackIcon}
-              {message}
-              {close !== undefined ? action : null}
-            </div>
-          }
-          classes={{
-            root: classes.root + " " + classes[color],
-            message: classes.message + " " + classes.container
-          }}
-        />
-      )
-    };
-  }
-  closeAlert() {
-    this.setState({ alert: null });
-  }
-  render() {
-    return this.state.alert;
+    return (
+      <Snack
+        message={
+          <div>
+            {snackIcon}
+            {message}
+            {close !== undefined ? action : null}
+          </div>
+        }
+        classes={{
+          root: classes.root + " " + classes[color],
+          message: classes.message + " " + classes.container
+        }}
+      />
+    );
   }
 }
 
@@ -75,7 +74,8 @@ SnackbarContent.propTypes = {
   message: PropTypes.node.isRequired,
   color: PropTypes.oneOf(["info", "success", "warning", "danger", "primary"]),
   close: PropTypes.bool,
-  icon: PropTypes.oneOfType([PropTypes.func, PropTypes.string])
+  icon: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  closeMessage: PropTypes.func
 };
 
 export default withStyles(snackbarContentStyle)(SnackbarContent);
