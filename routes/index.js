@@ -48,6 +48,8 @@ function login(req, res) {
   }
   // Connection URL
   const url = "mongodb://localhost:27017";
+  // Connection URL of cluster
+  //const url = "mongodb+srv://user:1234@cluster0-ewiok.mongodb.net/test?retryWrites=true";
 
   // Database Name
   const dbName = "users";
