@@ -79,9 +79,8 @@ function login(req, res) {
 }
 
 function signup(req, res) {
-
   if(!req.body.email || !req.body.password) {
-    res.status(400).send("Email and password required.");
+    res.status(400).send({msg:"Email and password required."});
     return;
   } 
   else {
@@ -103,7 +102,7 @@ function signup(req, res) {
 
       db.collection("users").findOne({"email": req.body.email}, (err, r) => {
         if(!err && r) {
-          res.status(403).send("There is already a user with the email provided.");
+          res.status(403).send({msg:"There is already a user with the email provided."});
           return;
         }
         else {
@@ -112,7 +111,7 @@ function signup(req, res) {
             password: req.body.password
           }, (err, r) => {
             if(err) {
-              res.status(500).send("An error ocurred during the operation.");
+              res.status(500).send({msg:"An error ocurred during the operation."});
               return;
             }
           });
@@ -121,7 +120,7 @@ function signup(req, res) {
 
       db.collection("count").findOne({"email":req.body.email}, (err, r) => {
         if(!err && r) {
-          res.status(403).send("There is already a user with the email provided.");
+          res.status(403).send({msg:"There is already a user with the email provided."});
           return;
         }
         else {
@@ -130,10 +129,10 @@ function signup(req, res) {
             count: 0
           }, (err, r) => {
             if(err) {
-              res.status(500).send("An error ocurred during the operation.");
+              res.status(500).send({msg:"An error ocurred during the operation."});
               return;
             }
-            else res.send(r);
+            else res.send({msg:"Successfully signed up."});
           });
         }
       });
@@ -259,7 +258,7 @@ function setWinner(req, res) {
     db.collection("winner").findOne({"email": email}, (err, r) => {
       if(!err && r) {
         res.status(403);
-        res.send("There is already a user with the email provided.");
+        res.send({msg:"There is already a user with the email provided."});
       }
       else {
         db.collection("winner").insertOne({
