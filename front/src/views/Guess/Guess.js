@@ -57,8 +57,10 @@ class Guess extends Component {
 
   winnerBoard() {
     fetch('/winner')
+      .then(res => res.json())
       .then(res => {
-        res.json().then(json => this.setState({result: json}));
+        console.log("got data!", res);
+        this.setState({winner: res});
       })
       .catch(err => console.log(err));
   }
@@ -68,25 +70,24 @@ class Guess extends Component {
     // const msg = this.state.signUp ? 'If you already have an account: ' : 'If you don\'t have an account yet: ';
     // const buttonMsg = !this.state.signUp ? 'login' : 'sign up';
     // const buttonChangeMsg = this.state.signUp ? 'login' : 'sign up';
-    let result = null;
-    if(this.state.result) {
-        const list = this.state.result.map((r, i) => {
+    let winner = null;
+    if(this.state.winner) {
+        const list = this.state.winner.map(r => {
           return (
-            <li key={i}>{r}</li>
+            <li>{r["email"]}: {r["count"]}</li>
           );
         });
-        result = (
+        winner = (
           <div>
-            <h3>Results:</h3>
+            <h3>Top 10 Winners:</h3>
             <ul>{list}</ul>
           </div>
         );
     }
     return (
       <div>
-        <button onClick={() => this.winnerBoard()}>Winner
-        </button>
-        {result}
+        <button onClick={() => this.winnerBoard()}>See Winners</button>
+        {winner}
       </div>
     );
   }

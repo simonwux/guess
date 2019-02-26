@@ -230,6 +230,7 @@ function getWinner(callback) {
       .limit(10)
       .toArray(function (err, docs) {
         assert.equal(null, err);
+        //console.log(docs);
         callback(docs);
         client.close();
       });
@@ -384,7 +385,7 @@ router.get("/guess", function(req, res) {
 /* guess. */
 router.get("/winner", function(req, res) {
   getWinner( function (docs) {
-    res.send(docs);
+    res.status(200).send(docs);
   });
 });
 
