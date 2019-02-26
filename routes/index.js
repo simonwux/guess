@@ -204,7 +204,7 @@ function guess(req, res) {
 
 }
 
-function getWinner(req, res) {
+function getWinner(callback) {
 
   const url = "mongodb://localhost:27017";
 
@@ -215,7 +215,7 @@ function getWinner(req, res) {
   const client = new MongoClient(url);
 
   // Use connect method to connect to the Server
-  client.connect({ useNewUrlParser: true }, function(err) {
+  client.connect(function(err) {
     assert.equal(null, err);
     if (err) {
         res.status(404).send({msg:"Get winner wrong."});
@@ -230,7 +230,8 @@ function getWinner(req, res) {
       .limit(10)
       .toArray(function (err, docs) {
         assert.equal(null, err);
-        res.send(docs);
+        callback(docs);
+        client.close();
       });
   });
 }
@@ -247,6 +248,8 @@ function setWinner(req, res) {
 
   var email = req.body.email;
   var count = req.body.count;
+  console.log(email);
+  console.log(count);
 
   // Use connect method to connect to the Server
   client.connect(function(err) {
@@ -267,8 +270,11 @@ function setWinner(req, res) {
         }, (err, r) => {
           if(err) {
             res.status(500);
-            res.send("An error ocurred during the operation.");
-          }
+            res.send({msg:"An error ocurred during the operation."});
+            client.close();
+            return;
+          } else res.send({msg:"set a winner"});
+
           // else {
           //   res.send(r.ops[0]);
           // }
@@ -276,7 +282,7 @@ function setWinner(req, res) {
       }
     });
   });
-  res.send({msg:"set a winner"})
+  client.close();
 }
 
 function getCount(req, res) {
@@ -377,7 +383,9 @@ router.get("/guess", function(req, res) {
 
 /* guess. */
 router.get("/winner", function(req, res) {
-  getWinner(req, res);
+  getWinner( function (docs) {
+    res.send(docs);
+  });
 });
 
 
