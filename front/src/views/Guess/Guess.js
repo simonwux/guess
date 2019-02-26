@@ -65,6 +65,61 @@ class Guess extends Component {
       .catch(err => console.log(err));
   }
 
+  searchCount(email2) {
+    fetch('/count', {
+      headers: {
+        email: email2
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log("got data!", res);
+        this.setState({count: res});
+      })
+      .catch(err => console.log(err));
+  }
+
+  setWinnerBoard(email2, count2) {
+    fetch("/winner", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email2,
+        count: count2 //set winner count
+      })
+    })
+      .then(response => {
+        // response.json().then(data => console.log(data));
+        response
+          .clone()
+          .json()
+          .then(data => this.setState({ regisMsg: data.msg }));
+      })
+      .catch(err => console.log(err));
+  }
+
+  addCount(email2) {
+    fetch("/count", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email2
+      })
+    })
+      .then(response => {
+        // response.json().then(data => console.log(data));
+        response
+          .clone()
+          .json()
+          .then(data => this.setState({ regisMsg: data.msg }));
+      })
+      .catch(err => console.log(err));
+  }
+
   render() {
     // const title = this.state.signUp ? 'Sign Up' : 'Login';
     // const msg = this.state.signUp ? 'If you already have an account: ' : 'If you don\'t have an account yet: ';
@@ -84,9 +139,28 @@ class Guess extends Component {
           </div>
         );
     }
+
+    let count = null;
+    if(this.state.count) {
+        const list = this.state.count.map(r => {
+          return (
+            <li>{r["email"]}: {r["count"]}</li>
+          );
+        });
+        count = (
+          <div>
+            <h3>Search for counter:</h3>
+            <ul>{list}</ul>
+          </div>
+        );
+    }
     return (
       <div>
         <button onClick={() => this.winnerBoard()}>See Winners</button>
+        <button onClick={() => this.setWinnerBoard("asdf", 100)}>Add Winners</button>
+        <button onClick={() => this.searchCount("a")}>See count</button>
+        <button onClick={() => this.addCount("a")}>Add Count</button>
+        {count}
         {winner}
       </div>
     );

@@ -249,8 +249,8 @@ function setWinner(req, res) {
 
   var email = req.body.email;
   var count = req.body.count;
-  console.log(email);
-  console.log(count);
+  // console.log(email);
+  // console.log(count);
 
   // Use connect method to connect to the Server
   client.connect(function(err) {
