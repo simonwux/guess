@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import LoginPage from "views/LoginPage/LoginPage.js";
+import LoginPage from "views/LoginPage/LoginPage.jsx";
 import "assets/scss/guess-react.scss";
 
 class App extends Component {

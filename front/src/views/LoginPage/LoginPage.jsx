@@ -3,6 +3,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Icon from "@material-ui/core/Icon";
 import PropTypes from "prop-types";
+import { Route, Redirect } from "react-router-dom";
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
 import Face from "@material-ui/icons/Face";
@@ -10,6 +11,7 @@ import People from "@material-ui/icons/People";
 import PersonAdd from "@material-ui/icons/PersonAdd";
 // core components
 import Header from "components/Header/Header.jsx";
+import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
@@ -61,7 +63,7 @@ class LoginPage extends React.Component {
     })
       .then(response => {
         if (response.status === 200) {
-          response.json().then(json => this.props.onLogin(json.email));
+          response.json().then(json => this.props.login(json.email));
         } else {
           // response.json().then(data => console.log(data));
           response
@@ -82,7 +84,8 @@ class LoginPage extends React.Component {
     })
       .then(response => {
         if (response.status === 200) {
-          response.json().then(json => this.props.onLogin(json.email));
+          // response.json().then(json => console.log(json));
+          response.json().then(json => this.props.login(json.email));
         } else {
           // console.log(response);
           response
@@ -127,7 +130,13 @@ class LoginPage extends React.Component {
     const regisMsg = this.state.regisMsg;
     return (
       <div>
-        <Header absolute color="transparent" brand="Guess 2/3" {...rest} />
+        <Header
+          absolute
+          color="transparent"
+          brand="Guess 2/3"
+          rightLinks={<HeaderLinks />}
+          {...rest}
+        />
         <div
           className={classes.pageHeader}
           style={{
@@ -311,7 +320,6 @@ class LoginPage extends React.Component {
               </div>
             </div>
           </div>
-          <Footer whiteFont />
         </div>
       </div>
     );
@@ -319,7 +327,7 @@ class LoginPage extends React.Component {
 }
 
 LoginPage.propTypes = {
-  onLogin: PropTypes.func
+  login: PropTypes.func
 };
 
 export default withStyles(loginPageStyle)(LoginPage);

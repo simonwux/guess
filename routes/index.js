@@ -164,6 +164,7 @@ function guess(req, res) {
   if(!req.get("number")) {
     res.status(400);
     res.send({msg: "Number required."});
+    return;
   }
   // Connection URL
   const url = "mongodb://localhost:27017";
@@ -184,18 +185,20 @@ function guess(req, res) {
       if(err || !r) {
 
         update(req, res, db);
-        res.status(404);
         db.collection("guess"). find({}).toArray(function(err, result) { 
           var number = parseInt(result[0]["number"]);
           if (number > req.header("number")){
-            res.send({msg:"Too Small"});
+            res.status(404).send({msg:"Too Small"});
+            return;
           }
           else{
-            res.send({msg:"Too Large"});
+            res.status(404).send({msg:"Too Large"});
+            return;
           }
         });
       }
       else res.send({msg:"Number right."});
+      return;
     });
 
 
