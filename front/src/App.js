@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import LoginPage from "views/LoginPage/LoginPage.jsx";
+import LoginPage from "views/LoginPage/LoginPage.js";
+import Guess from "views/Guess/Guess";
+
 import "assets/scss/guess-react.scss";
 
 class App extends Component {
@@ -26,7 +29,9 @@ class App extends Component {
   }
 
   renderApp() {
-    return <h1>Hi, {this.state.email}!</h1>;
+    return(
+      <Guess email={this.state.email}/>
+    );
   }
 
   render() {

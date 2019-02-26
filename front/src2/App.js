@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Login from "./components/Login/Login";
+import Guess from "./components/Guess/Guess";
 import "./App.css";
 
 class App extends Component {
@@ -23,9 +24,9 @@ class App extends Component {
   }
 
   renderApp() {
-    // return(
-    //   <Duozi email={this.state.email}/>
-    // );
+    return(
+      <Guess email={this.state.email}/>
+    );
   }
 
   render() {
