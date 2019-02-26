@@ -27,14 +27,16 @@ import loginPageStyle from "assets/jss/guess-react/views/loginPage.jsx";
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
-    this.closeMessage = this.closeMessage.bind(this);
+    this.closeLoginMessage = this.closeLoginMessage.bind(this);
+    this.closeRegisMessage = this.closeRegisMessage.bind(this);
     this.state = {
       cardAnimation: "cardHidden",
       name: "",
       email: "",
       password: "",
       password2: "",
-      msg: ""
+      loginMsg: "",
+      regisMsg: ""
     };
   }
 
@@ -61,7 +63,11 @@ class LoginPage extends React.Component {
         if (response.status === 200) {
           response.json().then(json => this.props.onLogin(json.email));
         } else {
-          response.json().then(data => this.setState({ msg: data.msg }));
+          // response.json().then(data => console.log(data));
+          response
+            .clone()
+            .json()
+            .then(data => this.setState({ regisMsg: data.msg }));
         }
       })
       .catch(err => console.log(err));
@@ -79,7 +85,10 @@ class LoginPage extends React.Component {
           response.json().then(json => this.props.onLogin(json.email));
         } else {
           // console.log(response);
-          response.json().then(data => this.setState({ msg: data.msg }));
+          response
+            .clone()
+            .json()
+            .then(data => this.setState({ loginMsg: data.msg }));
         }
       })
       .catch(err => console.log(err));
@@ -104,14 +113,18 @@ class LoginPage extends React.Component {
     );
   }
 
-  closeMessage() {
-    console.log("XXX");
-    this.setState({ msg: "" });
+  closeLoginMessage() {
+    this.setState({ loginMsg: "" });
+  }
+
+  closeRegisMessage() {
+    this.setState({ regisMsg: "" });
   }
 
   render() {
     const { classes, ...rest } = this.props;
-    const msg = this.state.msg;
+    const loginMsg = this.state.loginMsg;
+    const regisMsg = this.state.regisMsg;
     return (
       <div>
         <Header absolute color="transparent" brand="Guess 2/3" {...rest} />
@@ -142,14 +155,14 @@ class LoginPage extends React.Component {
                                   <h4>Login</h4>
                                 </CardHeader>
                                 <CardBody>
-                                  {msg.length > 0 && (
+                                  {loginMsg.length > 0 && (
                                     // <LoginError msg={this.state.msg} />
                                     <SnackbarContent
-                                      message={msg}
+                                      message={loginMsg}
                                       close
                                       color="danger"
                                       icon="info_outline"
-                                      closeMessage={this.closeMessage}
+                                      closeMessage={this.closeLoginMessage}
                                     />
                                   )}
                                   <CustomInput
@@ -223,23 +236,16 @@ class LoginPage extends React.Component {
                                   <h4>Register</h4>
                                 </CardHeader>
                                 <CardBody>
-                                  <CustomInput
-                                    labelText="Name..."
-                                    id="name-reg"
-                                    formControlProps={{
-                                      fullWidth: true
-                                    }}
-                                    inputProps={{
-                                      type: "text",
-                                      endAdornment: (
-                                        <InputAdornment position="end">
-                                          <People
-                                            className={classes.inputIconsColor}
-                                          />
-                                        </InputAdornment>
-                                      )
-                                    }}
-                                  />
+                                  {regisMsg.length > 0 && (
+                                    // <LoginError msg={this.state.msg} />
+                                    <SnackbarContent
+                                      message={regisMsg}
+                                      close
+                                      color="danger"
+                                      icon="info_outline"
+                                      closeMessage={this.closeRegisMessage}
+                                    />
+                                  )}
                                   <CustomInput
                                     labelText="Email..."
                                     id="email-reg"
@@ -267,25 +273,6 @@ class LoginPage extends React.Component {
                                     onChange={this.handleChangePassword.bind(
                                       this
                                     )}
-                                    formControlProps={{
-                                      fullWidth: true
-                                    }}
-                                    inputProps={{
-                                      type: "password",
-                                      endAdornment: (
-                                        <InputAdornment position="end">
-                                          <Icon
-                                            className={classes.inputIconsColor}
-                                          >
-                                            lock_outline
-                                          </Icon>
-                                        </InputAdornment>
-                                      )
-                                    }}
-                                  />
-                                  <CustomInput
-                                    labelText="Confirm Password"
-                                    id="pass-reg-con"
                                     formControlProps={{
                                       fullWidth: true
                                     }}
