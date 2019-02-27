@@ -38,7 +38,9 @@ const assert = require("assert");
 
 
 // }
-const url = "mongodb://localhost:27017/";
+//const url = "mongodb://localhost:27017/";
+const url = "mongodb+srv://user:1234@cluster0-ewiok.mongodb.net/test?retryWrites=true";
+
 const dbName = "users";
 // const client = new MongoClient(url);
 
