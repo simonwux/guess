@@ -36,12 +36,14 @@ class GuessPage extends React.Component {
       success: false,
       error: false,
       msg: "",
-      won: false
+      won: false,
+      lastGuess: "",
+      lastResult: ""
     };
   }
 
   won() {
-    this.setState({ won: true });
+    this.setState({ won: true, lastResult: "" });
   }
 
   guessWrong() {
@@ -67,21 +69,24 @@ class GuessPage extends React.Component {
             .then(data => {
               if (data.msg.toLowerCase().includes("small")) {
                 history.push({ guess: guess, result: "Too Small" });
+                this.setState({ lastResult: "Too Small" });
               } else {
                 history.push({ guess: guess, result: "Too Big" });
+                this.setState({ lastResult: "Too Big" });
               }
               this.setState({
                 history: history,
                 guess: "",
                 success: false,
-                error: false
+                error: false,
+                lastGuess: guess
               });
               this.guessWrong();
             });
         }
       })
       .catch(err => console.log(err));
-    fetch("/count", {
+/*    fetch("/count", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -89,7 +94,7 @@ class GuessPage extends React.Component {
       body: JSON.stringify({
         email: this.state.email
       })
-    }).catch(err => console.log(err));
+    }).catch(err => console.log(err));*/
   }
 
   guessOnChange(e) {
@@ -167,6 +172,8 @@ class GuessPage extends React.Component {
               guessSubmit={this.tryGuess}
               guessHistory={this.state.history}
               won={this.state.won}
+              lastGuess={this.state.lastGuess}
+              lastResult={this.state.lastResult}
             />
           </div>
         </div>

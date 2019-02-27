@@ -67,7 +67,9 @@ class InputSection extends React.Component {
       guessMessage,
       guessSubmit,
       guessHistory,
-      won
+      won,
+      lastGuess,
+      lastResult
     } = this.props;
     return (
       <div className={classes.section}>
@@ -90,6 +92,15 @@ class InputSection extends React.Component {
                     Open Winner Board
                   </Button>
                 </Link>
+              </GridItem>
+            )}
+            {!won && lastGuess !== "" && (
+              <GridItem xs={12} sm={12} md={12}>
+                <h4 className={classes.text}>
+                  {" "}
+                  {"You guessed " + lastGuess}
+                  {" but it was " + lastResult}
+                </h4>
               </GridItem>
             )}
             {!won && (
@@ -242,7 +253,9 @@ InputSection.propTypes = {
       result: PropTypes.string
     })
   ),
-  won: PropTypes.bool
+  won: PropTypes.bool,
+  lastGuess: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  lastResult: PropTypes.string
 };
 
 export default withStyles(inputStyle)(InputSection);

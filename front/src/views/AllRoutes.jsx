@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Router, Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import "assets/scss/guess-react.scss";
@@ -23,13 +23,15 @@ class AllRoutes extends Component {
   }
 
   login(e) {
-    this.setState({ authenticated: true, email: e });
-    this.props.history.push("/guess");
+    this.setState({ authenticated: true, email: e }, err =>
+      this.props.history.push("/guess")
+    );
   }
 
   logout() {
-    this.setState({ authenticated: false, email: "" });
-    this.props.history.push("/");
+    this.setState({ authenticated: false, email: "" }, err =>
+      this.props.history.push("/")
+    );
   }
 
   openBoard() {
@@ -42,6 +44,7 @@ class AllRoutes extends Component {
       <Switch>
         {/*      <Route path="/guess" component={GuessPage} />*/}
         <ProtectedRoute
+          exact
           path="/guess"
           component={GuessPage}
           login={this.login}
@@ -50,6 +53,7 @@ class AllRoutes extends Component {
           authenticated={this.state.authenticated}
           email={this.state.email}
         />
+        {this.state.authenticated && <Redirect exact from="/" to="/guess" />}
         <Route
           exact
           path="/"
@@ -64,6 +68,7 @@ class AllRoutes extends Component {
           )}
         />
         <Route
+          exact
           path="/board"
           render={() => (
             <BoardPage
@@ -75,6 +80,7 @@ class AllRoutes extends Component {
             />
           )}
         />
+        <Redirect from="*" to="/" />
         {/*<Route
           path="/board"
           component={BoardPage}

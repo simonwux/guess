@@ -35,10 +35,7 @@ function HeaderLinks({ ...props }) {
             }}
             buttonIcon={Person}
             dropdownList={[
-              <Link to="/" className={classes.dropdownLink}>
-                Logout
-              </Link>,
-              <Button onClick={logout}> Log2</Button>
+              <a className={classes.dropdownLink} onClick={logout}> Logout</a>
             ]}
           />
         

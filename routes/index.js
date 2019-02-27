@@ -114,27 +114,29 @@ function signup(req, res) {
                             res.status(500).send({ msg: "An error ocurred during the operation." });
                             return;
                         }
+                        db.collection("count").findOne({ "email": req.body.email }, (err, r) => {
+                            if (!err && r) {
+                                res.status(403).send({ msg: "There is already a user with the email provided." });
+                                return;
+                            } else {
+                                db.collection("count").insertOne({
+                                    email: req.body.email,
+                                    count: 0,
+                                    won: false
+                                }, (err, r) => {
+                                    if (err) {
+                                        res.status(500).send({ msg: "An error ocurred during the operation." });
+                                        return;
+                                    } else res.send({ msg: "Successfully signed up." });
+                                });
+                            }
+                        });
                     });
+
                 }
             });
 
-            db.collection("count").findOne({ "email": req.body.email }, (err, r) => {
-                if (!err && r) {
-                    res.status(403).send({ msg: "There is already a user with the email provided." });
-                    return;
-                } else {
-                    db.collection("count").insertOne({
-                        email: req.body.email,
-                        count: 0,
-                        won: false
-                    }, (err, r) => {
-                        if (err) {
-                            res.status(500).send({ msg: "An error ocurred during the operation." });
-                            return;
-                        } else res.send({ msg: "Successfully signed up." });
-                    });
-                }
-            });
+
 
 
         });
@@ -158,9 +160,9 @@ function update(req, res, db) {
                 });
         }
         // console.log(result);
-        var newCount = parseInt(result["count"]) + 1;
-        var newTotal = parseInt(result["number"]) * (newCount - 1) + parseInt(req.header("number"));
-        var newNumber = parseInt((newTotal / newCount));
+        const newCount = parseInt(result["count"]) + 1;
+        const newTotal = parseInt(result["number"]) * (newCount - 1) + parseInt(req.header("number"));
+        const newNumber = parseInt((newTotal / newCount));
         // console.log(newCount);
         // console.log(newTotal);
         // console.log(newNumber);
@@ -196,58 +198,61 @@ function guess(req, res) {
 
         const db = client.db(dbName);
 
-        var won = false;
+        let won = false;
         db.collection("guess").findOne({}, (err, r) => {
             if (err) throw err;
             if (!r) {
-                var sum = 0;
-                var allCount = 0;
-                for (var i = 1; i <= 100; i++) {
-                    var cnt = getRandomInt(0, 2);
+                let sum = 0;
+                let allCount = 0;
+                db.collection("guess").insert({ number: (sum / allCount), count: allCount }, (err, r) => {});
+                for (let i = 1; i <= 100; i++) {
+                    let cnt = getRandomInt(0, 2);
                     db.collection("hist").insert({
                         number: i,
                         count: cnt
+                    }, (err, r) => {
+                        allCount += cnt;
+                        sum += i * cnt;
+                        
                     })
-                    allCount += cnt;
-                    sum += i * cnt;
+
                 }
-                db.collection("guess").insert({ number: (sum / allCount), count: allCount });
-            }
 
-
-            db.collection("guess").findOne({}, function(err, result) {
-                var number = Math.round(result.number * 2 / 3);
-                // console.log("AAA" + number);
-                if (number > req.header("number")) {
-                    res.status(404).send({ msg: "Too Small" });
-                } else if (number < req.header("number")) {
-                    res.status(404).send({ msg: "Too Large" });
-                } else {
-                    res.send({ msg: "Number right." });
-                    won = true;
-                }
-            });
-
-            // update(req, res, db);
-
-            db.collection("hist").updateOne({ number: parseInt(req.header("number")) }, { $inc: { count: 1 } }, { upsert: true });
-            db.collection('hist').aggregate([{ $group: { _id: 1, number: { $sum: { "$multiply": ["$number", "$count"] } }, count: { $sum: "$count" } } }]).toArray((err, res) => {
-                assert.equal(err, null);
-                db.collection("guess").updateOne({}, { $set: { "number": res[0]["number"] / res[0]["count"], "count": res[0]["count"] } }, (err, r) => {
-                    client.close();
-                });
-            })
-
-            db.collection("count").updateOne({ email: email }, { $inc: { count: 1 } }, { upsert: true });
-
+                realGuess(db, req, res);
+            } else realGuess(db, req, res);
 
         });
     });
-
-
 }
 
-function getWinner(callback) {
+function realGuess(db, req, res) {
+    const email = req.header("email");
+    let won = false;
+    db.collection("guess").findOne({}, function(err, result) {
+        let number = Math.round(result.number * 2 / 3);
+        // console.log("AAA" + number);
+        if (number > req.header("number")) {
+            res.status(404).send({ msg: "Too Small" });
+        } else if (number < req.header("number")) {
+            res.status(404).send({ msg: "Too Large" });
+        } else {
+            res.send({ msg: "Number right." });
+            won = true;
+        }
+        db.collection("hist").updateOne({ number: parseInt(req.header("number")) }, { $inc: { count: 1 } }, { upsert: true }, (err, r) => {
+            db.collection('hist').aggregate([{ $group: { _id: 1, number: { $sum: { "$multiply": ["$number", "$count"] } }, count: { $sum: "$count" } } }]).toArray((err, res) => {
+                assert.equal(err, null);
+                db.collection("guess").updateOne({}, { $set: { "number": res[0]["number"] / res[0]["count"], "count": res[0]["count"] } }, (err, r) => {
+                    // client.close();
+                    db.collection("count").updateOne({ email: email }, { $inc: { count: 1 } }, { upsert: true });
+                });
+            })
+        });
+
+    });
+}
+
+function getWinner(req, res, callback) {
     // const url = "mongodb://localhost:27017";
 
     // // Database Name
@@ -261,6 +266,7 @@ function getWinner(callback) {
         assert.equal(null, err);
         if (err) {
             res.status(404).send({ msg: "Get winner wrong." });
+            return;
         }
         console.log("Connected successfully to server");
 
@@ -294,6 +300,7 @@ function getWinner_old(callback) {
         assert.equal(null, err);
         if (err) {
             res.status(404).send({ msg: "Get winner wrong." });
+            return;
         }
         console.log("Connected successfully to server");
 
@@ -307,7 +314,6 @@ function getWinner_old(callback) {
                 assert.equal(null, err);
                 //console.log(docs);
                 callback(docs);
-                client.close();
             });
     });
 }
@@ -323,8 +329,8 @@ function setWinner(req, res) {
     // // Create a new MongoClient
     // const client = new MongoClient(url);
 
-    var email = req.body.email;
-    var count = req.body.count;
+    const email = req.body.email;
+    const count = req.body.count;
     // console.log(email);
     // console.log(count);
 
@@ -390,7 +396,7 @@ function addCount(req, res) {
 
     // const url = "mongodb://localhost:27017";
     // //console.log(req.toString());
-    var email = req.body.email;
+    const email = req.body.email;
     //console.log(req.body.email);
     // Database Name
     // const dbName = "users";
@@ -415,7 +421,7 @@ function addCount(req, res) {
             } else {
                 //console.log("Successfuly found one.");
                 //console.log(result);
-                var count = parseInt(result[0]["count"]) + 1;
+                let count = parseInt(result[0]["count"]) + 1;
                 db.collection("count").findOneAndUpdate({ "email": email }, { $set: { "count": count } }, (err, r) => {});
                 res.send({ msg: "adding counter" });
             }
@@ -458,7 +464,7 @@ router.get("/guess", function(req, res) {
 
 /* guess. */
 router.get("/winner", function(req, res) {
-    getWinner(function(docs) {
+    getWinner(req, res, function(docs) {
         res.status(200).send(docs);
     });
 });

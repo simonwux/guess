@@ -64,6 +64,12 @@ const headerStyle = {
       background: "transparent"
     }
   },
+  link: {
+    color: "#FFFFFF",
+    "&:hover,&:focus": {
+      color: "#FFFFFF"
+    }
+  },
   appResponsive: {
     margin: "20px 10px"
   },

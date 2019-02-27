@@ -51,19 +51,20 @@ class LoginPage extends React.Component {
   }
 
   handleRegister() {
+    const email = this.state.email;
     fetch("/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        email: this.state.email,
+        email: email,
         password: this.state.password
       })
     })
       .then(response => {
         if (response.status === 200) {
-          response.json().then(json => this.props.login(json.email));
+          response.json().then(() => this.props.login(email));
         } else {
           // response.json().then(data => console.log(data));
           response
