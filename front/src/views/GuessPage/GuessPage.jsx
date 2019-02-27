@@ -29,46 +29,67 @@ class GuessPage extends React.Component {
     this.guessOnChange = this.guessOnChange.bind(this);
     this.guessOnKeyPress = this.guessOnKeyPress.bind(this);
     this.tryGuess = this.tryGuess.bind(this);
+    this.won = this.won.bind(this);
     this.state = {
-      min: 0,
-      max: 100,
       guess: "",
+      history: [],
       success: false,
       error: false,
-      msg: ""
+      msg: "",
+      won: false
     };
   }
 
-  getWinners() {
+  won() {
+    this.setState({ won: true });
+  }
+
+  guessWrong() {
     return;
   }
 
   tryGuess() {
     const guess = this.state.guess;
+    const history = this.state.history;
     fetch("/guess", {
       headers: {
+        email: this.props.email,
         number: guess
       }
     })
       .then(response => {
         if (response.status === 200) {
-          this.getWinners();
+          this.won();
         } else {
-          console.log(response);
           response
             .clone()
             .json()
             .then(data => {
-              console.log(data);
               if (data.msg.toLowerCase().includes("small")) {
-                this.setState({ min: guess + 1, guess: undefined });
+                history.push({ guess: guess, result: "Too Small" });
               } else {
-                this.setState({ max: guess - 1, guess: undefined });
+                history.push({ guess: guess, result: "Too Big" });
               }
+              this.setState({
+                history: history,
+                guess: "",
+                success: false,
+                error: false
+              });
+              this.guessWrong();
             });
         }
       })
       .catch(err => console.log(err));
+    fetch("/count", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: this.state.email
+      })
+    }).catch(err => console.log(err));
   }
 
   guessOnChange(e) {
@@ -76,16 +97,18 @@ class GuessPage extends React.Component {
     var value = e.target.value;
     if (value !== "" && re.test(value)) {
       const blurVal = parseInt(value);
-      if (blurVal > this.state.max) {
-        this.setState({ success: false, error: true, msg: "Too Large" });
-      } else if (blurVal < this.state.min) {
-        this.setState({ success: false, error: true, msg: "Too Small" });
+      if (blurVal > 100 || blurVal < 0) {
+        this.setState({
+          success: false,
+          error: true,
+          msg: "Not an integer between 0 and 100"
+        });
       } else {
         this.setState({ success: true, error: false, msg: "" });
       }
       this.setState({ guess: blurVal });
     } else {
-      this.setState({ guess: "" });
+      this.setState({ guess: "", success: false, error: false, msg: "" });
     }
   }
 
@@ -105,7 +128,7 @@ class GuessPage extends React.Component {
           color="transparent"
           routes={dashboardRoutes}
           brand="Guess 2/3"
-          rightLinks={<HeaderLinks email={email} />}
+          rightLinks={<HeaderLinks email={email} logout={this.props.logout} />}
           fixed
           changeColorOnScroll={{
             height: 400,
@@ -142,6 +165,8 @@ class GuessPage extends React.Component {
               guessError={this.state.error}
               guessMessage={this.state.msg}
               guessSubmit={this.tryGuess}
+              guessHistory={this.state.history}
+              won={this.state.won}
             />
           </div>
         </div>
@@ -152,7 +177,8 @@ class GuessPage extends React.Component {
 }
 
 GuessPage.propTypes = {
-  email: PropTypes.string
+  email: PropTypes.string,
+  logout: PropTypes.func
 };
 
 export default withStyles(guessPageStyle)(GuessPage);

@@ -128,13 +128,14 @@ class LoginPage extends React.Component {
     const { classes, ...rest } = this.props;
     const loginMsg = this.state.loginMsg;
     const regisMsg = this.state.regisMsg;
+    const email = this.props.email;
     return (
       <div>
         <Header
           absolute
           color="transparent"
           brand="Guess 2/3"
-          rightLinks={<HeaderLinks />}
+          rightLinks={<HeaderLinks email={email} />}
           {...rest}
         />
         <div
@@ -327,7 +328,8 @@ class LoginPage extends React.Component {
 }
 
 LoginPage.propTypes = {
-  login: PropTypes.func
+  login: PropTypes.func,
+  email: PropTypes.string
 };
 
 export default withStyles(loginPageStyle)(LoginPage);

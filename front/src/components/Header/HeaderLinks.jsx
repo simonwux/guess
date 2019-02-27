@@ -10,7 +10,7 @@ import ListItem from "@material-ui/core/ListItem";
 import Tooltip from "@material-ui/core/Tooltip";
 
 // @material-ui/icons
-import { Apps, CloudDownload } from "@material-ui/icons";
+import { Apps, Assignment, Info } from "@material-ui/icons";
 import Person from "@material-ui/icons/Person";
 
 // core components
@@ -20,11 +20,12 @@ import Button from "components/CustomButtons/Button.jsx";
 import headerLinksStyle from "assets/jss/guess-react/components/headerLinksStyle.jsx";
 
 function HeaderLinks({ ...props }) {
-  const { classes, email } = props;
-  return (
-    <List className={classes.list}>
+    const { classes, email, logout } = props;
+    return (
+        <List className={classes.list}>
+      { email &&
       <ListItem className={classes.listItem}>
-        {email &&
+        
           <CustomDropdown
             noLiPadding
             buttonText={email}
@@ -36,11 +37,34 @@ function HeaderLinks({ ...props }) {
             dropdownList={[
               <Link to="/" className={classes.dropdownLink}>
                 Logout
-              </Link>
+              </Link>,
+              <Button onClick={logout}> Log2</Button>
             ]}
           />
-        }
+        
       </ListItem>
+      }
+      
+        <ListItem className={classes.listItem}>
+        <Tooltip
+          id="board"
+          title="Winner Board"
+          placement={window.innerWidth > 959 ? "top" : "left"}
+          classes={{ tooltip: classes.tooltip }}
+        >
+          <Button
+            target="_blank"
+            color="transparent"
+            className={classes.navLink}
+          >
+            <Link to="/board" className={classes.navInherit}>
+            <i className={classes.socialIcons + " fa fa-users"} />
+              </Link>
+          </Button>
+          
+            
+        </Tooltip>
+        </ListItem>
       <ListItem className={classes.listItem}>
         <Tooltip
           id="instagram-twitter"
@@ -59,7 +83,7 @@ function HeaderLinks({ ...props }) {
         </Tooltip>
       </ListItem>
     </List>
-  );
+    );
 }
 
 export default withStyles(headerLinksStyle)(HeaderLinks);

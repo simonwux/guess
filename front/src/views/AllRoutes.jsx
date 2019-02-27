@@ -7,6 +7,7 @@ import "assets/scss/guess-react.scss";
 // pages for this product
 import GuessPage from "views/GuessPage/GuessPage.jsx";
 import LoginPage from "views/LoginPage/LoginPage.jsx";
+import BoardPage from "views/BoardPage/BoardPage.jsx";
 import ProtectedRoute from "views/ProtectedRoute.jsx";
 
 class AllRoutes extends Component {
@@ -14,6 +15,7 @@ class AllRoutes extends Component {
     super(props);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
+    this.openBoard = this.openBoard.bind(this);
     this.state = {
       authenticated: false,
       email: ""
@@ -30,6 +32,11 @@ class AllRoutes extends Component {
     this.props.history.push("/");
   }
 
+  openBoard() {
+    this.setState({ authenticated: false, email: "" });
+    this.props.history.push("/");
+  }
+
   render() {
     return (
       <Switch>
@@ -39,19 +46,44 @@ class AllRoutes extends Component {
           component={GuessPage}
           login={this.login}
           logout={this.logout}
+          openBoard={this.openBoard}
           authenticated={this.state.authenticated}
           email={this.state.email}
         />
         <Route
+          exact
           path="/"
           render={() => (
             <LoginPage
               login={this.login}
               logout={this.logout}
+              openBoard={this.openBoard}
               authenticated={this.state.authenticated}
+              email={this.state.email}
             />
           )}
         />
+        <Route
+          path="/board"
+          render={() => (
+            <BoardPage
+              login={this.login}
+              logout={this.logout}
+              openBoard={this.openBoard}
+              authenticated={this.state.authenticated}
+              email={this.state.email}
+            />
+          )}
+        />
+        {/*<Route
+          path="/board"
+          component={BoardPage}
+          login={this.login}
+          logout={this.logout}
+          openBoard={this.openBoard}
+          authenticated={this.state.authenticated}
+          email={this.state.email}
+        />*/}
       </Switch>
     );
   }
