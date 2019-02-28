@@ -1,6 +1,8 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Guess App",
+  "name": "Guess 2/3 App",
+  "default_locale": "en",
+  "description": "A guessing 2/3 of others' guessing game using node + express + react + mongo. ",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,6 +10,7 @@
       "type": "image/x-icon"
     }
   ],
+  "author": "David and Shuomin",
   "start_url": "./index.html",
   "display": "standalone",
   "theme_color": "#000000",
