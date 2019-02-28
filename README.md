@@ -42,4 +42,15 @@ You can either use a local database or a cloud database. Just set your database 
 # Author
 Shuomin Wu and Yifei Chen
 
-# Pictures
+# Screenshots
+![ScreenShot](https://github.com/simonwux/simonwux.github.io/blob/master/screenshot/1.PNG)
+
+## Demonstration Video
+
+
+## Class Link
+[CS-5610 Web Development Spring 2019](http://johnguerra.co/classes/webDevelopment_spring_2019/)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
