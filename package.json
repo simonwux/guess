@@ -4,13 +4,14 @@
   "description": "Guess 2/3 App",
   "private": true,
   "scripts": {
+    "heroku-prebuild": "npm install",
     "start": "node ./bin/www",
-    "heroku-postbuild": "npm install && cd front && npm install && npm run build"
+    "heroku-postbuild": "cd front && npm install && npm run build"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
-    "dotenv": "latest",
+    "dotenv": "^6.0.0",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
