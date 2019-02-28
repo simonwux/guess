@@ -42,7 +42,7 @@ require('dotenv').config()
 //const url = "mongodb://localhost:27017/";
 const dbUser = process.env.MONGODB_USER;
 const dbPassword = process.env.MONGODB_PASSWORD;
-const url = `mongodb+srv://${dbUser}:${dbPassword}@cluster0-ewiok.mongodb.net/test?retryWrites=true`;
+const url = `mongodb+srv://user:1234@cluster0-ewiok.mongodb.net/test?retryWrites=true`;
 
 const dbName = "users";
 
