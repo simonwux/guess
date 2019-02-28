@@ -246,7 +246,7 @@ function realGuess(db, req, res) {
                 assert.equal(err, null);
                 db.collection("guess").updateOne({}, { $set: { "number": res[0]["number"] / res[0]["count"], "count": res[0]["count"] } }, (err, r) => {
                     // client.close();
-                    db.collection("count").updateOne({ email: email }, { $inc: { count: 1 } }, { upsert: true });
+                    db.collection("count").updateOne({ email: email }, { $inc: { count: 1 }, $set: {won: won} }, { upsert: true });
                 });
             })
         });
@@ -275,7 +275,7 @@ function getWinner(req, res, callback) {
         const db = client.db(dbName);
 
         db.collection("count")
-            .find({ count: { $gt: 0 } })
+            .find({ count: { $gt: 0 }, won: true })
             .sort({ "count": 1 })
             .limit(10)
             .toArray(function(err, docs) {
