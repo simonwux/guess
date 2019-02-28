@@ -45,7 +45,6 @@ const dbPassword = process.env.MONGODB_PASSWORD;
 const url = `mongodb+srv://${dbUser}:${dbPassword}@cluster0-ewiok.mongodb.net/test?retryWrites=true`;
 
 const dbName = "users";
-// const client = new MongoClient(url);
 
 function login(req, res) {
 
