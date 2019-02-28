@@ -36,8 +36,10 @@ Which will run the front-end development server on the port 3000, then visit (ht
 
 # Database
 
-It assumes Mongo to be running locally with a database users. It has 5 collections: count, guess, hist, users, winner.
+You can either use a local database or a cloud database. Just set your database url as MONGODB_URL in .env as an environment variable. It has 5 collections: count, guess, hist, users, winner.
 
-```
 
-```
+# Author
+Shuomin Wu and Yifei Chen
+
+# Pictures
