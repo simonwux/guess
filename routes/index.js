@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
+require('dotenv').config()
 // function getFollowers(callback) {
 
 
@@ -39,7 +40,9 @@ const assert = require("assert");
 
 // }
 //const url = "mongodb://localhost:27017/";
-const url = "mongodb+srv://user:1234@cluster0-ewiok.mongodb.net/test?retryWrites=true";
+const dbUser = process.env.MONGODB_USER;
+const dbPassword = process.env.MONGODB_PASSWORD;
+const url = `mongodb+srv://${dbUser}:${dbPassword}@cluster0-ewiok.mongodb.net/test?retryWrites=true`;
 
 const dbName = "users";
 // const client = new MongoClient(url);
@@ -48,7 +51,7 @@ function login(req, res) {
 
 
     if (!req.get("email") || !req.get("password")) {
-        res.status(400).send({ msg: "Email and password required." });
+        res.send({ msg: "Email and password required." });
         return;
     }
     // // Connection URL
@@ -71,9 +74,12 @@ function login(req, res) {
 
         db.collection("users").findOne({ "email": req.header("email"), "password": req.header("password") }, (err, r) => {
             if (err || !r) {
-                res.status(404).send({ msg: "Email or password wrong." });
+                res.send({ msg: "Email or password wrong." });
                 return;
-            } else res.send(r);
+            } else {
+              r["msg"] = "Successfully login";
+              res.send(r);
+            }
         });
 
 
@@ -84,7 +90,7 @@ function login(req, res) {
 
 function signup(req, res) {
     if (!req.body.email || !req.body.password) {
-        res.status(400).send({ msg: "Email and password required." });
+        res.send({ msg: "Email and password required." });
         return;
     } else {
         // // Connection URL
@@ -105,7 +111,7 @@ function signup(req, res) {
 
             db.collection("users").findOne({ "email": req.body.email }, (err, r) => {
                 if (!err && r) {
-                    res.status(403).send({ msg: "There is already a user with the email provided." });
+                    res.send({ msg: "There is already a user with the email provided." });
                     return;
                 } else {
                     db.collection("users").insertOne({
@@ -118,7 +124,7 @@ function signup(req, res) {
                         }
                         db.collection("count").findOne({ "email": req.body.email }, (err, r) => {
                             if (!err && r) {
-                                res.status(403).send({ msg: "There is already a user with the email provided." });
+                                res.send({ msg: "There is already a user with the email provided." });
                                 return;
                             } else {
                                 db.collection("count").insertOne({
@@ -246,7 +252,7 @@ function realGuess(db, req, res) {
                 assert.equal(err, null);
                 db.collection("guess").updateOne({}, { $set: { "number": res[0]["number"] / res[0]["count"], "count": res[0]["count"] } }, (err, r) => {
                     // client.close();
-                    db.collection("count").updateOne({ email: email }, { $inc: { count: 1 }, $set: {won: won} }, { upsert: true });
+                    db.collection("count").updateOne({ email: email }, { $inc: { count: 1 } }, { upsert: true });
                 });
             })
         });
@@ -275,7 +281,7 @@ function getWinner(req, res, callback) {
         const db = client.db(dbName);
 
         db.collection("count")
-            .find({ count: { $gt: 0 }, won: true })
+            .find({ count: { $gt: 0 } })
             .sort({ "count": 1 })
             .limit(10)
             .toArray(function(err, docs) {

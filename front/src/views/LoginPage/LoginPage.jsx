@@ -63,16 +63,19 @@ class LoginPage extends React.Component {
       })
     })
       .then(response => {
-        if (response.status === 200) {
+        response
+            .clone()
+            .json()
+            .then(data => {
+              if (data.msg.toLowerCase().includes("success")) {
           response.json().then(() => this.props.login(email));
         } else {
-          // response.json().then(data => console.log(data));
           response
             .clone()
             .json()
             .then(data => this.setState({ regisMsg: data.msg }));
         }
-      })
+      })})
       .catch(err => console.log(err));
   }
 
@@ -84,8 +87,12 @@ class LoginPage extends React.Component {
       }
     })
       .then(response => {
-        if (response.status === 200) {
-          // response.json().then(json => console.log(json));
+        response
+            .clone()
+            .json()
+            .then(data => {
+              if (data.msg.toLowerCase().includes("success")) {
+
           response.json().then(json => this.props.login(json.email));
         } else {
           // console.log(response);
@@ -94,7 +101,7 @@ class LoginPage extends React.Component {
             .json()
             .then(data => this.setState({ loginMsg: data.msg }));
         }
-      })
+      })})
       .catch(err => console.log(err));
   }
 
