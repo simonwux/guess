@@ -43,7 +43,13 @@ You can either use a local database or a cloud database. Just set your database 
 Shuomin Wu and Yifei Chen
 
 # Screenshots
-![ScreenShot](https://github.com/simonwux/simonwux.github.io/blob/master/screenshot/1.PNG)
+![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/1.PNG)
+![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/2.PNG)
+![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/3.PNG)
+![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/4.PNG)
+![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/5.PNG)
+![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/6.PNG)
+![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/7.PNG)
 
 ## Demonstration Video
 
