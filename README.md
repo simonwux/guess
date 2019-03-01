@@ -52,6 +52,7 @@ Shuomin Wu and Yifei Chen
 ![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/7.PNG)
 
 ## Demonstration Video
+https://www.youtube.com/watch?v=z67zUIbCNwg&feature=youtu.be
 
 
 ## Class Link
